@@ -25,7 +25,7 @@ def facturacion(dbConection, db):
       if len(results) > 0:
         for prod in results:
           nombre_prod, precio_prod = prod
-          print("\nNombre del producto: %s\nPrecio del producto:%f" % (nombre_prod, precio_prod))
+          print("\nNombre del producto: %s\nPrecio del producto: %f" % (nombre_prod, precio_prod))
 
       print("\n-------------------------------")
       print("Nit del consumidor: %i" % (id_cliente))
