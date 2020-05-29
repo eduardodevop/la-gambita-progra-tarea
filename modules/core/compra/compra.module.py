@@ -75,14 +75,33 @@ def compra(dbConection, db):
   os.system('cls' if os.name == 'nt' else 'clear')
   print('-> Agregar una compra <-\n')
   nombreprod = inputU.inputRequired('Nombre del producto: ')
-  descripcionprod = inputU.inputRequired('Descripcion del producto: ')
-  precioprod = inputU.inputNumber('Precio del producto: ')
-  unidadesprod = inputU.inputNumber('Unidades adquiridas: ')
-  db.execute('INSERT INTO inventario (nombre_prod, desc_prod, precio_prod, stock) VALUES ("' + nombreprod + '", "'+descripcionprod + '",'  +  str(precioprod)  +','+  str(unidadesprod)  +')')
-  #db.execute('INSERT INTO invetario (nombre_prod, nit) VALUES ("' + nombre + '", ' + str(nit)  + ')')
+  #Seleccionamos el nombre del producto de la base de datos
+  db.execute('SELECT nombre_prod FROM inventario WHERE nombre_prod ="'+nombreprod+'"')
+  results = db.fetchall()
+  #Si no hay resultados significa que es un nuevo producto y se procede a añadirlo
+  if len(results) < 1:
+    descripcionprod = inputU.inputRequired('Descripcion del producto: ')
+    precioprod = inputU.inputNumber('Precio del producto: ')
+    unidadesprod = inputU.inputNumber('Unidades adquiridas: ')
+    #Se añade el nuevo producto a la base de datos
+    db.execute('INSERT INTO inventario (nombre_prod, desc_prod, precio_prod, stock) VALUES ("' + nombreprod + '", "'+descripcionprod + '",'  +  str(precioprod)  +','+  str(unidadesprod)  +')')
+  else:
+    print("+++ El producto ya existe esta apunto de actualizar las unidades +++")
+    unidadesprod = inputU.inputNumber('Unidades adquiridas: ')
+    #Seleccionamos las unidades disponibles en la base de datos
+    db.execute('SELECT stock FROM inventario WHERE nombre_prod ="'+nombreprod+'"')
+    results = db.fetchall()
+    #Sumamos las nuevas unidades a las unidades disonibles
+    for row in results:
+      unidadesprod = unidadesprod + int(row[0])
+    #Actualizamos las unidades en la base de datos
+    db.execute('UPDATE inventario SET stock = '+str(unidadesprod)+' WHERE nombre_prod ="'+nombreprod+'"')
   dbConection.commit()
   input('\nPrecione enter para continuar...')
   moduleMenu(dbConection, db)
+'''
+  main
+'''
 def mainFunction(mainMenu):
   # Usamos cls para borrar la terminal en windows o clear para linux
   os.system('cls' if os.name == 'nt' else 'clear')
