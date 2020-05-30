@@ -37,7 +37,7 @@ def moduleMenu(dbConection, db,titulo="+++ Selecciona una opcion +++"):
 # Funcion para mostrar Proveedores
 def showProvs(dbConection, db):
   os.system('cls' if os.name == 'nt' else 'clear')
-  print('-> Mostrando clientes <-\n')
+  print('-> Mostrando proveedores <-\n')
   db.execute('SELECT * FROM proveedores')
   results = db.fetchall()
   if len(results) < 1:
